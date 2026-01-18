@@ -129,13 +129,13 @@ const navigation: NavItem[] = [
   },
   {
     icon: UsersRound,
-    label: 'HR',
+    label: 'HR (New)',
     href: '/dashboard/hr',
     module: 'hr',
     children: [
       { label: 'Employees', href: '/dashboard/hr/employees', module: 'hr' },
       { label: 'Attendance', href: '/dashboard/hr/attendance', module: 'hr' },
-      { label: 'Recruitment', href: '/dashboard/hr/recruitment', module: 'hr' },
+      { label: 'Recruitment (New)', href: '/dashboard/hr/recruitment', module: 'hr' },
       { label: 'Performance', href: '/dashboard/hr/performance', module: 'hr' },
       { label: 'Admin Requests', href: '/dashboard/hr/admin', module: 'hr' },
     ]
