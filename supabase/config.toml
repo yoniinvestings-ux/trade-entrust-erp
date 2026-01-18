@@ -1,0 +1,16 @@
+project_id = "ctqcpmrtgppaeckzerwg"
+
+[functions.translate-to-chinese]
+verify_jwt = false
+
+[functions.operations-advisor]
+verify_jwt = false
+
+[functions.wecom-send]
+verify_jwt = false
+
+[functions.wecom-receive]
+verify_jwt = false
+
+[functions.factory-reminder-scheduler]
+verify_jwt = false
