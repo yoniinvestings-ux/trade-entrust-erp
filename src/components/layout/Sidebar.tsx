@@ -26,6 +26,7 @@ interface NavItem {
 }
 
 const navigation: NavItem[] = [
+  // Core Modules
   {
     icon: LayoutDashboard,
     label: 'Dashboard',
