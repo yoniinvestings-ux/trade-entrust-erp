@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, Users, Target, ShoppingCart, Package, Factory, FileText, 
-  ClipboardCheck, Truck, DollarSign, FolderKanban, Settings, ChevronLeft, 
+import {
+  LayoutDashboard, Users, Target, ShoppingCart, Package, Factory, FileText,
+  ClipboardCheck, Truck, DollarSign, FolderKanban, Settings, ChevronLeft,
   ChevronRight, Search, Megaphone, AlertTriangle, Headphones,
   UsersRound, Shield, Globe, ChevronDown, ChevronUp, BarChart3, Clock
 } from 'lucide-react';
@@ -134,6 +134,9 @@ const navigation: NavItem[] = [
     children: [
       { label: 'Employees', href: '/dashboard/hr/employees', module: 'hr' },
       { label: 'Attendance', href: '/dashboard/hr/attendance', module: 'hr' },
+      { label: 'Recruitment', href: '/dashboard/hr/recruitment', module: 'hr' },
+      { label: 'Performance', href: '/dashboard/hr/performance', module: 'hr' },
+      { label: 'Admin Requests', href: '/dashboard/hr/admin', module: 'hr' },
     ]
   },
   {
@@ -183,12 +186,12 @@ export function Sidebar() {
     if (item.adminOnly) {
       return role === 'super_admin';
     }
-    
+
     // If no module specified, always show (like Settings in Admin children)
     if (!item.module) {
       return true;
     }
-    
+
     // Check if user has view permission for this module
     return hasPermission(item.module, 'view');
   });
@@ -196,7 +199,7 @@ export function Sidebar() {
   // Filter children based on permissions
   const getFilteredChildren = (children?: NavChild[]) => {
     if (!children) return undefined;
-    
+
     return children.filter(child => {
       if (!child.module) return true;
       return hasPermission(child.module, 'view');
@@ -204,8 +207,8 @@ export function Sidebar() {
   };
 
   const toggleExpanded = (href: string) => {
-    setExpandedItems(prev => 
-      prev.includes(href) 
+    setExpandedItems(prev =>
+      prev.includes(href)
         ? prev.filter(h => h !== href)
         : [...prev, href]
     );
@@ -219,7 +222,7 @@ export function Sidebar() {
   };
 
   return (
-    <aside 
+    <aside
       className={cn(
         "fixed left-0 top-0 z-40 h-screen transition-all duration-normal",
         collapsed ? "w-16" : "w-64"
@@ -238,8 +241,8 @@ export function Sidebar() {
           </div>
         )}
         {collapsed && <img src="/images/logo.png" alt="Trade Entrust" className="h-8 w-8 object-contain mx-auto" />}
-        <button 
-          onClick={() => setCollapsed(!collapsed)} 
+        <button
+          onClick={() => setCollapsed(!collapsed)}
           className={cn(
             "p-1.5 rounded-md hover:bg-sidebar-accent text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors",
             collapsed && "absolute right-2"
@@ -328,8 +331,8 @@ export function Sidebar() {
                 {role?.replace('_', ' ') || 'No role'}
               </p>
             </div>
-            <NavLink 
-              to="/dashboard/settings" 
+            <NavLink
+              to="/dashboard/settings"
               className="p-1.5 rounded-md hover:bg-sidebar-accent text-sidebar-foreground/60 hover:text-sidebar-foreground"
             >
               <Settings className="h-4 w-4" />

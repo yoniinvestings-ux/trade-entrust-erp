@@ -37,6 +37,13 @@ import WorkloadDashboard from "./pages/WorkloadDashboard";
 import Settings from "./pages/Settings";
 import UserManagement from "./pages/admin/UserManagement";
 import PermissionMatrix from "./pages/admin/PermissionMatrix";
+import EmployeeList from "./pages/hr/EmployeeList";
+import AttendanceDashboard from "./pages/hr/AttendanceDashboard";
+import Recruitment from "./pages/hr/Recruitment";
+import PerformanceDashboard from "./pages/hr/PerformanceDashboard";
+import PerformanceReview from "./pages/hr/PerformanceReview";
+import AdminRequests from "./pages/hr/AdminRequests";
+import Salaries from "./pages/finance/Salaries";
 import { CustomerLayout } from "./components/layout/CustomerLayout";
 import CustomerLogin from "./pages/customer/CustomerLogin";
 import CustomerDashboard from "./pages/customer/CustomerDashboard";
@@ -310,12 +317,32 @@ function AppRoutes() {
         {/* HR */}
         <Route path="hr/employees" element={
           <PermissionGuard module="hr">
-            <Dashboard />
+            <EmployeeList />
           </PermissionGuard>
         } />
         <Route path="hr/attendance" element={
           <PermissionGuard module="hr">
-            <Dashboard />
+            <AttendanceDashboard />
+          </PermissionGuard>
+        } />
+        <Route path="hr/recruitment" element={
+          <PermissionGuard module="hr">
+            <Recruitment />
+          </PermissionGuard>
+        } />
+        <Route path="hr/performance" element={
+          <PermissionGuard module="hr">
+            <PerformanceDashboard />
+          </PermissionGuard>
+        } />
+        <Route path="hr/performance/:id" element={
+          <PermissionGuard module="hr">
+            <PerformanceReview />
+          </PermissionGuard>
+        } />
+        <Route path="hr/admin" element={
+          <PermissionGuard module="hr">
+            <AdminRequests />
           </PermissionGuard>
         } />
 
@@ -365,6 +392,12 @@ function AppRoutes() {
       <Route path="/customer" element={<ProtectedRoute><CustomerLayout /></ProtectedRoute>}>
         <Route index element={<CustomerDashboard />} />
         <Route path="orders" element={<CustomerOrders />} />
+        <Route path="finance/expenses" element={<Dashboard />} /> {/* Placeholder */}
+        <Route path="finance/salaries" element={
+          <PermissionGuard module="finance">
+            <Salaries />
+          </PermissionGuard>
+        } />
         <Route path="orders/:id" element={<CustomerOrderDetail />} />
         <Route path="shipments" element={<CustomerShipments />} />
         <Route path="support" element={<CustomerSupport />} />

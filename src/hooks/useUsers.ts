@@ -11,6 +11,7 @@ type AppRole = Database['public']['Enums']['app_role'];
 
 export interface TeamMember extends Profile {
   role?: AppRole;
+  employeeDetails?: Database['public']['Tables']['employees']['Row'];
 }
 
 export interface CustomerPortalUser extends CustomerUser {
@@ -40,11 +41,26 @@ export function useTeamMembers() {
 
       if (rolesError) throw rolesError;
 
+      // Fetch employees safely - if it fails (e.g. no permission), just return null for details
+      let employeeMap = new Map();
+      try {
+        const { data: employees, error: employeesError } = await supabase
+          .from('employees')
+          .select('*');
+
+        if (!employeesError && employees) {
+          employeeMap = new Map(employees.map(e => [e.user_id, e]));
+        }
+      } catch (err) {
+        console.warn('Failed to fetch employee details:', err);
+      }
+
       const roleMap = new Map(roles?.map(r => [r.user_id, r.role]));
-      
+
       return (profiles || []).map(profile => ({
         ...profile,
         role: roleMap.get(profile.user_id) as AppRole | undefined,
+        employeeDetails: employeeMap.get(profile.user_id),
       }));
     },
   });
@@ -178,13 +194,13 @@ export function useTogglePortalUserActive() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ 
-      type, 
-      id, 
-      isActive 
-    }: { 
-      type: 'customer' | 'supplier'; 
-      id: string; 
+    mutationFn: async ({
+      type,
+      id,
+      isActive
+    }: {
+      type: 'customer' | 'supplier';
+      id: string;
       isActive: boolean;
     }) => {
       const table = type === 'customer' ? 'customer_users' : 'supplier_users';
@@ -195,8 +211,8 @@ export function useTogglePortalUserActive() {
       if (error) throw error;
     },
     onSuccess: (_, { type }) => {
-      queryClient.invalidateQueries({ 
-        queryKey: [type === 'customer' ? 'customer-portal-users' : 'supplier-portal-users'] 
+      queryClient.invalidateQueries({
+        queryKey: [type === 'customer' ? 'customer-portal-users' : 'supplier-portal-users']
       });
       toast.success('Portal user status updated');
     },
@@ -222,7 +238,7 @@ export function useCreateInvitation() {
       entityId?: string;
     }) => {
       const { data: { user } } = await supabase.auth.getUser();
-      
+
       // Generate a random token
       const token = crypto.randomUUID();
       const expiresAt = new Date();
